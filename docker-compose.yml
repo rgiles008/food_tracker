@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  db:
+    image: 'postgres:11-alpine'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: foodie_dev
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - /var/lib/docker/volumes/foodie_app/_data
+  
+  web:
+    build: .
+    depends_on:
+      - db
+    environment:
+      MIX_ENV: dev
+    env_file:
+      - .env
+    ports:
+      - "4000:4000"
+    volumes: 
+      - .:/app
